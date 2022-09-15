@@ -7,7 +7,8 @@ from main.models import *
 
 def main_view(request):
     notes = Note.objects.all()
-    context = {'notes': notes}
+    context = {'notes': notes,
+               'title': 'Главная страница'}
     return render(request, 'main/main.html', context)
 
 
@@ -20,7 +21,8 @@ def create_view(request):
 
     else:
         form = NoteForm()
-        context = {'form': form}
+        context = {'form': form,
+                   'title': 'Создать таск'}
         return render(request, 'main/create.html', context)
 
 
@@ -34,7 +36,8 @@ def update_view(request, id):
             note.save()
             return redirect('main')
         else:
-            context = {'note': note}
+            context = {'note': note,
+                       'title': f'Редактировать таск №{note.id}'}
             return render(request, 'main/update.html', context)
     except Exception:
         pass
@@ -59,5 +62,16 @@ def delete_view(request, id):
 
 
 def personal_area_view(request, user):
-    context = {'user': user}
+    context = {'user': user, 'title': 'Личный кабинет'}
     return render(request, 'main/personal_area.html', context)
+
+
+def create_account_view(request):
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = CreateUserForm()
+    context = {'form': form, 'title': 'Создать новый аккаунт'}
+    return render(request, 'main/create_account.html', context)
