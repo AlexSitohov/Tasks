@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Заголовок</label>
+        <input type="text" name="title" value="{{note.title}}"/>
+    </p>
+
+    <p>
+        <label>Текст</label>
+        <input type="text" name="text" value="{{note.text}}"/>
+    </p>
+
+    <p>
+        <label>Сделано</label>
+        <select name="done">
+            <option value="Сделано">Сделано</option>
+            <option value="Не cделано">Не сделано</option>
+        </select>
+    </p>
+
+    <button type="submit">Изменить</button>
+</form>
+
+{% endblock %}
