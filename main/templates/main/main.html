@@ -2,36 +2,18 @@
 
 {% block content %}
 {% if notes %}
-<div>
-    {% for note in notes %}
-    <p>{{note.title}}</p>
+{% for note in notes %}
+<div class="div_main">
+    <p>
+    <h2 style="text-align: center;">{{note.title}}</h2></p>
     <p>{{note.text}}</p>
-
-    <form method="post" action="{% url 'update_done' note.id %}">
-        {% csrf_token %}
-        <p>Статус:
-            <select name="done">
-
-                {% if note.done == 'Сделано' %}
-                <option value="{{note.done}}">{{note.done}}</option>
-                <option value="Не cделано">Не cделано</option>
-
-                {% else %}
-                <option value="{{note.done}}">{{note.done}}</option>
-                <option value="Сделано">Сделано</option>
-
-                {% endif %}
-            </select>
-
-        </p>
-
-        <button type="submit">Изменить</button>
-
-    </form>
-
+    <p>{{note.done}}</p>
     <p>Создано: {{note.create_date}}</p>
-
+    <p>{{note.author}}</p>
+    {% if user.is_authenticated %}
     <a href="{% url 'update' note.id %}">Изменить</a> | <a href="{% url 'delete' note.id %}">Удалить</a>
+    {% endif %}
+
 </div>
 {% endfor %}
 {% else %}

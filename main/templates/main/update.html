@@ -12,12 +12,12 @@
 
     <p>
         <label>Текст</label>
-        <input class='form-control' type="text" name="text" value="{{note.text}}"/>
+        <textarea class='form-control' cols="40"  rows="10" type="text" name="text" value="{{note.text}}">{{note.text}}</textarea>
     </p>
 
     <p>
         <label>Сделано</label>
-        <select class='form-control' name="done">
+        <select class="form-check" name="done">
             <option value="Сделано">Сделано</option>
             <option value="Не cделано">Не сделано</option>
         </select>

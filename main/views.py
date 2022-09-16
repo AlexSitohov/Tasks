@@ -1,3 +1,5 @@
+from django.contrib.auth import login, logout
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -5,8 +7,10 @@ from main.forms import *
 from main.models import *
 
 
+# .order_by('-create_date').values()
+
 def main_view(request):
-    notes = Note.objects.all()
+    notes = Note.objects.filter(author=request.user.id)
     context = {'notes': notes,
                'title': 'Главная страница'}
     return render(request, 'main/main.html', context)
@@ -15,9 +19,12 @@ def main_view(request):
 def create_view(request):
     if request.method == 'POST':
         form = NoteForm(request.POST)
+        form.author = str(request.user.username)
         if form.is_valid():
             form.save()
             return redirect('main')
+        else:
+            return HttpResponse('error')
 
     else:
         form = NoteForm()
@@ -43,14 +50,6 @@ def update_view(request, id):
         pass
 
 
-def update_done_view(request, id):
-    if request.method == "POST":
-        note = Note.objects.get(id=id)
-        note.done = request.POST.get("done")
-        note.save()
-    return redirect('main')
-
-
 def delete_view(request, id):
     try:
         note = Note.objects.get(id=id)
@@ -61,17 +60,38 @@ def delete_view(request, id):
         pass
 
 
-def personal_area_view(request, user):
-    context = {'user': user, 'title': 'Личный кабинет'}
-    return render(request, 'main/personal_area.html', context)
-
-
 def create_account_view(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)
+            return redirect('main')
     else:
         form = CreateUserForm()
     context = {'form': form, 'title': 'Создать новый аккаунт'}
     return render(request, 'main/create_account.html', context)
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('main')
+        else:
+            return HttpResponse('Error')
+
+    else:
+        form = UserLoginForm
+        context = {
+            'form': form,
+            'title': 'Авторизация'
+        }
+        return render(request, 'main/login.html', context)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('main')

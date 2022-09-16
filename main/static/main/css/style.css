@@ -1,7 +1,4 @@
-body {
-    BACKGROUND-COLOR: BLACK;
-    COLOR: WHITE;
-}
+
 
 
 .form-control {
@@ -15,4 +12,13 @@ body {
 
 #id_done_0, #id_done_1 {
     width: 100px;
+}
+
+
+
+.div_main {
+    width: 600px;
+    padding: 10px;
+    margin:20px auto 50px auto;
+    border: 1px solid;
 }

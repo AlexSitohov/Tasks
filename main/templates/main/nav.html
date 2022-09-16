@@ -7,21 +7,35 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'create' %}">Создать таск</a>
                 </li>
+                {% endif %}
+
+                {% if user.is_staff %}
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/">Админка</a>
                 </li>
+                {% endif %}
+
+
+                {% if user.is_authenticated %}
+
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'personal_area' user %}">Личный кабинет</a>
+                    <a class="nav-link disabled">Привет {{user}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled">{{user}}</a>
+                    <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_account' %}">Регистрация</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create_account' %}">Создать аккаунт</a>
+                    <a class="nav-link" href="{% url 'login' %}">Войти</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </div>
