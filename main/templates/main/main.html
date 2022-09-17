@@ -1,18 +1,36 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <p>
+        <label>Автор:</label>
+        <select class="form-check" name="iii">
+            <option value="all">Все авторы</option>
+            {% for i in u %}
+            <option value="{{i.id}}">{{i}}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <button type="submit" class="btn btn-primary">Применить</button>
+</form>
+
+
 {% if notes %}
+
 {% for note in notes %}
 <div class="div_main">
+
     <p>
-    <h2 style="text-align: center;">{{note.title}}</h2></p>
+    <h2 style="text-align: center;">{{note.title}}</h2>
     <p>{{note.text}}</p>
     <p>{{note.done}}</p>
     <p>Создано: {{note.create_date}}</p>
     <p>{{note.author}}</p>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated %} {% if note.author == user %}
     <a href="{% url 'update' note.id %}">Изменить</a> | <a href="{% url 'delete' note.id %}">Удалить</a>
-    {% endif %}
+    {% endif %}{% endif %}
 
 </div>
 {% endfor %}

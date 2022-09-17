@@ -11,6 +11,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'create' %}">Создать таск</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'self_tasks' %}">Мои таски</a>
+                </li>
                 {% endif %}
 
                 {% if user.is_staff %}

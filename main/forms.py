@@ -5,18 +5,18 @@ from django import forms
 from main.models import *
 
 
-class NoteForm(forms.ModelForm):
+class CreateNoteForm(forms.ModelForm):
     CHOICE = (('Сделано', 'Сделано'),
               ('Не cделано', 'Не cделано'))
-    title = forms.CharField(label='Заголовок', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    text = forms.CharField(label='Текст', widget=forms.Textarea(attrs={'class': 'form-control'}))
+    title = forms.CharField(label='Заголовок', widget=forms.TextInput(attrs={'id': 'title', 'class': 'form-control'}))
+    text = forms.CharField(label='Текст', widget=forms.Textarea(attrs={'id': 'text', 'class': 'form-control'}))
     done = forms.TypedChoiceField(label='Сделано', choices=CHOICE,
-                                  widget=forms.RadioSelect(attrs={'class': "form-check"}))
-    # author = forms.CharField(widget=forms.HiddenInput())
+                                  widget=forms.Select(attrs={'id': 'done', 'class': "form-check"}))
+    # author = forms.CharField(widget=forms.RadioSelect(attrs={'id': 'author'}), required=False)
 
     class Meta:
         model = Note
-        fields = ('title', 'text', 'done', 'author')
+        fields = ('title', 'text', 'done', )
 
 
 class CreateUserForm(UserCreationForm):

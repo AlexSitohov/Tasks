@@ -6,24 +6,24 @@
     {% csrf_token %}
 
     <p>
-        <label>Заголовок</label>
+        <label>Заголовок:</label>
         <input class='form-control' type="text" name="title" value="{{note.title}}"/>
     </p>
 
     <p>
-        <label>Текст</label>
+        <label>Текст:</label>
         <textarea class='form-control' cols="40"  rows="10" type="text" name="text" value="{{note.text}}">{{note.text}}</textarea>
     </p>
 
     <p>
-        <label>Сделано</label>
+        <label>Сделано:</label>
         <select class="form-check" name="done">
             <option value="Сделано">Сделано</option>
             <option value="Не cделано">Не сделано</option>
         </select>
     </p>
 
-    <button type="submit">Изменить</button>
+    <button class="btn btn-primary" type="submit">Изменить</button>
 </form>
 
 {% endblock %}

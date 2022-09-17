@@ -8,35 +8,50 @@ from main.models import *
 
 
 # .order_by('-create_date').values()
-
 def main_view(request):
-    notes = Note.objects.filter(author=request.user.id)
+    u = User.objects.all()
+    if request.method == 'POST' and request.POST.get('iii') != 'all':
+        notes = Note.objects.filter(author=request.POST.get('iii')).order_by('-create_date')
+    else:
+        notes = Note.objects.all().order_by('-create_date')
     context = {'notes': notes,
+               'u': u,
                'title': 'Главная страница'}
     return render(request, 'main/main.html', context)
 
 
+def self_tasks_view(request):
+    notes = Note.objects.filter(author=request.user.id).order_by('-create_date').values()
+    context = {'notes': notes,
+
+               'title': 'Мои таски'}
+    return render(request, 'main/self_tasks.html', context)
+
+
 def create_view(request):
     if request.method == 'POST':
-        form = NoteForm(request.POST)
-        form.author = str(request.user.username)
-        if form.is_valid():
-            form.save()
-            return redirect('main')
-        else:
-            return HttpResponse('error')
+        form = CreateNoteForm(request.POST)
+        note = Note.objects.create(title=request.POST.get('title'), text=request.POST.get('text'),
+                                   done=request.POST.get('done'), author=request.user)
+        # form.author = request.user
+
+        # if form.is_valid():
+        #     form.save()
+        return redirect('main')
+    # else:
+    #     return HttpResponse('error')
 
     else:
-        form = NoteForm()
+        form = CreateNoteForm()
         context = {'form': form,
                    'title': 'Создать таск'}
-        return render(request, 'main/create.html', context)
+    return render(request, 'main/create.html', context)
 
 
 def update_view(request, id):
     try:
         note = Note.objects.get(id=id)
-        if request.method == 'POST':
+        if request.method == 'POST' and note.author == request.user:
             note.title = request.POST.get('title')
             note.text = request.POST.get('text')
             note.done = request.POST.get('done')
@@ -47,13 +62,14 @@ def update_view(request, id):
                        'title': f'Редактировать таск №{note.id}'}
             return render(request, 'main/update.html', context)
     except Exception:
-        pass
+        return HttpResponse('Error')
 
 
 def delete_view(request, id):
     try:
         note = Note.objects.get(id=id)
-        note.delete()
+        if note.author == request.user:
+            note.delete()
         return redirect('main')
 
     except Exception:
