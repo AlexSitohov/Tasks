@@ -6,17 +6,18 @@ from main.models import *
 
 
 class CreateNoteForm(forms.ModelForm):
-    CHOICE = (('Сделано', 'Сделано'),
-              ('Не cделано', 'Не cделано'))
+    CHOICE = (('Не cделано', 'Не cделано'),
+              ('Сделано', 'Сделано'))
     title = forms.CharField(label='Заголовок', widget=forms.TextInput(attrs={'id': 'title', 'class': 'form-control'}))
     text = forms.CharField(label='Текст', widget=forms.Textarea(attrs={'id': 'text', 'class': 'form-control'}))
     done = forms.TypedChoiceField(label='Сделано', choices=CHOICE,
                                   widget=forms.Select(attrs={'id': 'done', 'class': "form-check"}))
+
     # author = forms.CharField(widget=forms.RadioSelect(attrs={'id': 'author'}), required=False)
 
     class Meta:
         model = Note
-        fields = ('title', 'text', 'done', )
+        fields = ('title', 'text', 'done',)
 
 
 class CreateUserForm(UserCreationForm):

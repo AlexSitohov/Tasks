@@ -11,9 +11,9 @@ from main.models import *
 def main_view(request):
     u = User.objects.all()
     if request.method == 'POST' and request.POST.get('iii') != 'all':
-        notes = Note.objects.filter(author=request.POST.get('iii')).order_by('-create_date')
+        notes = Note.objects.filter(author=request.POST.get('iii')).order_by('done', '-create_date', )
     else:
-        notes = Note.objects.all().order_by('-create_date')
+        notes = Note.objects.all().order_by('done', '-create_date', )
     context = {'notes': notes,
                'u': u,
                'title': 'Главная страница'}
@@ -21,7 +21,7 @@ def main_view(request):
 
 
 def self_tasks_view(request):
-    notes = Note.objects.filter(author=request.user.id).order_by('-create_date').values()
+    notes = Note.objects.filter(author=request.user.id).order_by('done', '-create_date', )
     context = {'notes': notes,
 
                'title': 'Мои таски'}

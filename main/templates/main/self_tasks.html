@@ -5,9 +5,15 @@
 {% for note in notes %}
 <div class="div_main">
     <p>
-    <h2 style="text-align: center;">{{note.title}}</h2></p>
-    <p>{{note.text}}</p>
-    <p>{{note.done}}</p>
+        {% if note.done == 'Сделано' %}
+
+    <h2 style="text-align: center;"><strike>{{note.title}}</strike></h2>
+    <p><strike> {{note.text}} </strike></p>
+    {% else %}
+    <h2 style="text-align: center;">{{note.title}}</h2>
+    <p>{{note.text}} </p>
+    {% endif %}
+    <p><b>{{note.done}}</b></p>
     <p>Создано: {{note.create_date}}</p>
     <p>{{note.author}}</p>
     {% if user.is_authenticated %}

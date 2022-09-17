@@ -12,14 +12,20 @@
 
     <p>
         <label>Текст:</label>
-        <textarea class='form-control' cols="40"  rows="10" type="text" name="text" value="{{note.text}}">{{note.text}}</textarea>
+        <textarea class='form-control' cols="40" rows="10" type="text" name="text"
+                  value="{{note.text}}">{{note.text}}</textarea>
     </p>
 
     <p>
         <label>Сделано:</label>
         <select class="form-check" name="done">
+            {% if note.done == 'Не cделано' %}
             <option value="Сделано">Сделано</option>
             <option value="Не cделано">Не сделано</option>
+            {% else %}
+            <option value="Не cделано">Не сделано</option>
+            <option value="Сделано">Сделано</option>
+            {% endif %}
         </select>
     </p>
 
