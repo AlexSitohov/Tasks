@@ -13,7 +13,11 @@ def main_view(request):
     if request.method == 'POST' and request.POST.get('iii') != 'all':
         notes = Note.objects.filter(author=request.POST.get('iii')).order_by('done', '-create_date', )
     else:
-        notes = Note.objects.all().order_by('done', '-create_date', )
+        notes_self = list(Note.objects.filter(author=request.user.id).order_by('done', '-create_date', ))
+        notes_exclude_self = list(Note.objects.exclude(author=request.user.id).order_by('done', '-create_date', ))
+        # notes = Note.objects.all().order_by('author','done', '-create_date', )
+        notes = notes_self + notes_exclude_self
+        print(notes)
     context = {'notes': notes,
                'u': u,
                'title': 'Главная страница'}
