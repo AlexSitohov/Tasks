@@ -7,19 +7,27 @@ from main.forms import *
 from main.models import *
 
 
-# .order_by('-create_date').values()
 def main_view(request):
-    u = User.objects.all()
-    if request.method == 'POST' and request.POST.get('iii') != 'all':
-        notes = Note.objects.filter(author=request.POST.get('iii')).order_by('done', '-create_date', )
-    else:
+    users_objects = User.objects.all()
+    if request.method == 'POST' and request.POST.get('user_object_identification') != 'all':
+        notes = Note.objects.filter(author=request.POST.get('user_object_identification')).order_by('done',
+                                                                                                    '-create_date', )
+
+    elif request.method == 'GET' and request.GET.get('search'):
+
+        notes = Note.objects.filter(title__icontains=request.GET.get('search')).order_by('done', '-create_date', )
+
+    elif request.user.is_authenticated:
         notes_self = list(Note.objects.filter(author=request.user.id).order_by('done', '-create_date', ))
         notes_exclude_self = list(Note.objects.exclude(author=request.user.id).order_by('done', '-create_date', ))
         # notes = Note.objects.all().order_by('author','done', '-create_date', )
         notes = notes_self + notes_exclude_self
-        print(notes)
+
+    else:
+        notes = Note.objects.all().order_by('done', '-create_date', )
+
     context = {'notes': notes,
-               'u': u,
+               'users_objects': users_objects,
                'title': 'Главная страница'}
     return render(request, 'main/main.html', context)
 
@@ -32,64 +40,68 @@ def self_tasks_view(request):
     return render(request, 'main/self_tasks.html', context)
 
 
-def create_view(request):
-    if request.method == 'POST':
-        form = CreateNoteForm(request.POST)
-        note = Note.objects.create(title=request.POST.get('title'), text=request.POST.get('text'),
-                                   done=request.POST.get('done'), author=request.user)
-        # form.author = request.user
-
-        # if form.is_valid():
-        #     form.save()
-        return redirect('main')
-    # else:
-    #     return HttpResponse('error')
-
-    else:
-        form = CreateNoteForm()
-        context = {'form': form,
-                   'title': 'Создать таск'}
-    return render(request, 'main/create.html', context)
-
-
-def update_view(request, id):
-    try:
-        note = Note.objects.get(id=id)
-        if request.method == 'POST' and note.author == request.user:
-            note.title = request.POST.get('title')
-            note.text = request.POST.get('text')
-            note.done = request.POST.get('done')
-            note.save()
+def create_task_view(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = CreateNoteForm(request.POST)  # form не используется. данные приходят из request.POST
+            note = Note.objects.create(title=request.POST.get('title'), text=request.POST.get('text'),
+                                       done=request.POST.get('done'), hidden=request.POST.get('hidden'),
+                                       author=request.user)
             return redirect('main')
         else:
-            context = {'note': note,
-                       'title': f'Редактировать таск №{note.id}'}
-            return render(request, 'main/update.html', context)
+            form = CreateNoteForm()
+            context = {'form': form,
+                       'title': 'Создать таск'}
+        return render(request, 'main/create.html', context)
+
+
+def update_task_view(request, id):
+    try:
+        note = Note.objects.get(id=id)
+        if note.author == request.user:
+            if request.method == 'POST':
+                note.title = request.POST.get('title')
+                note.text = request.POST.get('text')
+                note.done = request.POST.get('done')
+                note.hidden = request.POST.get('hidden')
+                note.save()
+                return redirect('main')
+            else:
+                context = {'note': note,
+                           'title': f'Редактировать таск №{note.id}'}
+                return render(request, 'main/update.html', context)
+        else:
+            return HttpResponse('Отказано в доступе')
     except Exception:
         return HttpResponse('Error')
 
 
-def delete_view(request, id):
+def delete_task_view(request, id):
     try:
         note = Note.objects.get(id=id)
         if note.author == request.user:
             note.delete()
+        else:
+            return HttpResponse('Отказано в доступе')
         return redirect('main')
 
     except Exception:
         pass
 
 
-def create_account_view(request):
-    if request.method == 'POST':
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('main')
+def register_account_view(request):
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                login(request, user)
+                return redirect('main')
+        else:
+            form = CreateUserForm()
+        context = {'form': form, 'title': 'Создать новый аккаунт'}
     else:
-        form = CreateUserForm()
-    context = {'form': form, 'title': 'Создать новый аккаунт'}
+        return HttpResponse('Вы уже вошли')
     return render(request, 'main/create_account.html', context)
 
 

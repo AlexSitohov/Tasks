@@ -2,46 +2,90 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
 <form method="post">
     {% csrf_token %}
     <p>
         <label>Автор:</label>
-        <select class="form-check" name="iii">
+        <select class="form-select" name="user_object_identification">
             <option value="all">Все авторы</option>
-            {% for i in u %}
-            <option value="{{i.id}}">{{i}}</option>
+            {% for user_object in users_objects %}
+            <option value="{{user_object.id}}">{{user_object}}</option>
             {% endfor %}
         </select>
     </p>
     <button type="submit" class="btn btn-primary">Применить</button>
 </form>
-
+{% endif %}
 
 {% if notes %}
 
 {% for note in notes %}
-<div class="div_main">
+{% if note.hidden == 'Публичная' %}
 
-    <p>
 
-        {% if note.done == 'Сделано' %}
+{% if note.done == 'Сделано' %}
 
-    <h2 style="text-align: center;"><strike>{{note.title}}</strike> </h2>
-    <p><strike> {{note.text}} </strike></p>
+<div class="div_main" style="background-color:#e8acac;">
     {% else %}
-    <h2 style="text-align: center;">{{note.title}}</h2>
-    <p>{{note.text}} </p>
-    {% endif %}
-    <p><b>{{note.done}}</b></p>
-    <p>Создано: {{note.create_date}}</p>
-    <p>{{note.author}}</p>
-    {% if user.is_authenticated %} {% if note.author == user %}
-    <p><a href="{% url 'update' note.id %}">Изменить</a> | <a href="{% url 'delete' note.id %}">Удалить</a></p>
-    {% endif %}{% endif %}
+    <div class="div_main" style="background-color:#9ddbe0;">
+        {% endif %}
 
-</div>
-{% endfor %}
-{% else %}
-Пусто...
-{% endif %}
-{% endblock %}
+
+        <p>
+
+            {% if note.done == 'Сделано' %}
+
+        <h2 style="text-align: center;"><strike>{{note.title}}</strike></h2>
+        <p><strike> {{note.text}} </strike></p>
+        {% else %}
+        <h2 style="text-align: center;">{{note.title}}</h2>
+        <p>{{note.text}} </p>
+        {% endif %}
+        <p><b style="font-size:30px;">{{note.done}}</b></p>
+        <p>Создано: {{note.create_date}}</p>
+        <p style="font-size:25px;">{{note.author}}</p>
+        {% if user.is_authenticated %} {% if note.author == user %}
+        <p><a href="{% url 'update' note.id %}">Изменить</a> | <a href="{% url 'delete' note.id %}">Удалить</a></p>
+        {% endif %}{% endif %}
+
+    </div>
+
+    {% elif note.hidden == 'Приватная' %}
+    {% if note.author == user %}
+
+
+    {% if note.done == 'Сделано' %}
+
+    <div class="div_main" style="background-color:#e8acac;">
+        {% else %}
+        <div class="div_main" style="background-color:#9ddbe0;">
+            {% endif %}
+
+
+            <p>
+
+                {% if note.done == 'Сделано' %}
+
+            <h2 style="text-align: center;"><strike>{{note.title}}</strike></h2>
+            <p><strike> {{note.text}} </strike></p>
+            {% else %}
+            <h2 style="text-align: center;">{{note.title}}</h2>
+            <p>{{note.text}} </p>
+            {% endif %}
+            <p><b style="font-size:30px;">{{note.done}}</b></p>
+            <p>Создано: {{note.create_date}}</p>
+            <p style="font-size:25px;">{{note.author}}</p>
+            <p>Приватная</p>
+            {% if user.is_authenticated %} {% if note.author == user %}
+            <p><a href="{% url 'update' note.id %}">Изменить</a> | <a href="{% url 'delete' note.id %}">Удалить</a></p>
+            {% endif %}{% endif %}
+
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        Пусто...
+        {% endif %}
+        {% endblock %}

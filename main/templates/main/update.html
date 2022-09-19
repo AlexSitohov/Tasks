@@ -18,13 +18,25 @@
 
     <p>
         <label>Сделано:</label>
-        <select class="form-check" name="done">
+        <select class="form-select" name="done">
             {% if note.done == 'Не cделано' %}
             <option value="Сделано">Сделано</option>
             <option value="Не cделано">Не сделано</option>
             {% else %}
             <option value="Не cделано">Не сделано</option>
             <option value="Сделано">Сделано</option>
+            {% endif %}
+        </select>
+    </p>
+    <p>
+        <label>Скрытая запись:</label>
+        <select class="form-select" name="hidden">
+            {% if note.hidden == 'Публичная' %}
+            <option value="Приватная">Приватная</option>
+            <option value="Обычная">Публичная</option>
+            {% else %}
+            <option value="Обычная">Публичная</option>
+            <option value="Приватная">Приватная</option>
             {% endif %}
         </select>
     </p>
