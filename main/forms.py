@@ -15,7 +15,7 @@ class CreateNoteForm(forms.ModelForm):
                            required=False)
     done = forms.TypedChoiceField(label='Сделано', choices=CHOICE,
                                   widget=forms.Select(attrs={'id': 'done', 'class': "form-select"}))
-    hidden = forms.TypedChoiceField(label='Приватная запись', choices=CHOICE_2, widget=forms.Select())
+    hidden = forms.TypedChoiceField(label='Приватная запись', choices=CHOICE_2, widget=forms.Select(attrs={'class': "form-select"}))
 
     class Meta:
         model = Note

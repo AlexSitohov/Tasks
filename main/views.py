@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
@@ -7,6 +8,7 @@ from main.forms import *
 from main.models import *
 
 
+# @login_required(login_url='login')
 def main_view(request):
     users_objects = User.objects.all()
     if request.method == 'POST' and request.POST.get('user_object_identification') != 'all':
