@@ -9,7 +9,7 @@ from main.forms import *
 from main.models import *
 
 
-# @login_required(login_url='login')
+@csrf_exempt
 def main_view(request):
     users_objects = User.objects.all()
     if request.method == 'POST' and request.POST.get('user_object_identification') != 'all':
@@ -35,6 +35,7 @@ def main_view(request):
     return render(request, 'main/main.html', context)
 
 
+@csrf_exempt
 def self_tasks_view(request):
     notes = Note.objects.filter(author=request.user.id).order_by('done', '-create_date', )
     context = {'notes': notes,
@@ -43,6 +44,7 @@ def self_tasks_view(request):
     return render(request, 'main/self_tasks.html', context)
 
 
+@csrf_exempt
 def create_task_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -58,6 +60,7 @@ def create_task_view(request):
         return render(request, 'main/create.html', context)
 
 
+@csrf_exempt
 def update_task_view(request, id):
     try:
         note = Note.objects.get(id=id)
@@ -79,6 +82,7 @@ def update_task_view(request, id):
         return HttpResponse('Error')
 
 
+@csrf_exempt
 def delete_task_view(request, id):
     try:
         note = Note.objects.get(id=id)
@@ -129,6 +133,7 @@ def login_view(request):
         return render(request, 'main/login.html', context)
 
 
+@csrf_exempt
 def logout_view(request):
     logout(request)
     return redirect('main')
