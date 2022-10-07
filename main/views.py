@@ -2,6 +2,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 from main.forms import *
@@ -91,6 +92,7 @@ def delete_task_view(request, id):
         pass
 
 
+@csrf_exempt
 def register_account_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -107,6 +109,7 @@ def register_account_view(request):
     return render(request, 'main/create_account.html', context)
 
 
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
