@@ -1,0 +1,29 @@
+.form-control {
+    width: 600px;
+}
+
+.form_create{
+    width: 700px;
+    margin: 20px auto 20px auto;
+}
+
+#id_done_0, #id_done_1 {
+    width: 100px;
+}
+
+.div_main {
+    width: 600px;
+    padding: 10px;
+    margin:20px auto 50px auto;
+    border: 1px solid;
+}
+
+.nav_form {
+    margin:0;
+    padding:5px;
+}
+
+
+.form-select  {
+    width: 200px;
+}
